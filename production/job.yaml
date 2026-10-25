@@ -4,7 +4,7 @@ command: python model.py --trainingdata ${{ inputs.training_data }}
 inputs:
   training_data:
     type: uri_file
-    path: azureml:iris:1
+    path: azureml:iris:3
 environment: azureml://registries/azureml/environments/sklearn-1.1/versions/14
 compute: azureml:lab3-ml-compute
 experiment_name: practical3-take1
