@@ -21,6 +21,7 @@ import argparse
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import mlflow
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
@@ -41,6 +42,7 @@ args = parser.parse_args()
 
 # %%
 df = pd.read_csv(args.trainingdata)
+mlflow.log_param("test_size", 0.20)
 print(df)
 
 # %% [markdown]
@@ -75,6 +77,7 @@ print("Test length", len(X_test))
 # Now we fit the machine learning model we're going to use to our X and Y data.
 
 # %%
+mlflow.autolog()
 model = DecisionTreeClassifier().fit(X_train, Y_train)
 
 # %% [markdown]
@@ -86,6 +89,7 @@ model = DecisionTreeClassifier().fit(X_train, Y_train)
 testPredictions = model.predict(X_test)
 acc = np.average(testPredictions == Y_test)
 print("Accuracy", acc)
+mlflow.log_metric("accuracy", float(acc))
 
 # %% [markdown]
 # ### More thourough evaluation
@@ -120,6 +124,10 @@ plt.legend()
 #Compute the AUC
 auc = roc_auc_score(Y_test,Y_scores, multi_class='ovr')
 print('AUC', auc)
+mlflow.log_metric("auc", float(auc))
+
+# the ROC plot you already build as `fig`:
+mlflow.log_figure(fig, "roc_curve.png")
 
 # %% [markdown]
 # ## Done
